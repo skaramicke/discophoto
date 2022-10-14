@@ -1,0 +1,15 @@
+{
+  "name": "discofoto",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "repository": "git@github.com:skaramicke/discofoto",
+  "author": "Mikael Grön <skaramicke@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.5.2"
+  }
+}
