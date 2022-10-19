@@ -11,19 +11,32 @@ const port = 3000;
 const imagesPath = path.join(__dirname, '..', 'images');
 
 const broadcastImages = (socket = null) => {
-  const images = [];
   fs.readdir(imagesPath, (err, files) => {
+    let images = []; 
     if (err) {
       console.log(err);
     } else {
-      images.length = 0;
       files.forEach(file => {
-        images.push({
-          filename: `/image/${file}`,
-          created: fs.statSync(`${imagesPath}/${file}`).ctime
-        });
+        if (file.split('.').pop() !== 'jpg' && file.split('.').pop() !== 'png') {
+          return;
+        }
+        images.push(file);
       });
     }
+
+    // Sort images by created timestamp
+    images.sort((a, b) => {
+      a_created = fs.statSync(`${imagesPath}/${a}`).ctimeMs;
+      b_created = fs.statSync(`${imagesPath}/${b}`).ctimeMs;
+      return a_created - b_created;
+    });
+
+    // Limit to 10x6 images
+    images = images.slice(0, 60);
+
+    // Prefix image filenames with the image path
+    images = images.map(image => `/image/${image}`);
+
     if (socket) {
       console.log('Sending images to new client');
       socket.emit('images', images);
